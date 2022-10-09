@@ -1,79 +1,74 @@
-# Project Version Bumper
+# Banger - Project Version Bumper
+
+This is github action for bumping project version. You have to provide a list
+of files where project version is defined - and then, this github action will
+look into that list of files and increment version which it finds.
+
+As of now, banger will increment only micro part of the version - i.e. the patch version.
+Version format in version file must have one of the following formats:
+
+    version = "<version in PEP 440>"
+    version = '<version in PEP 440>'
+    __version__ = "<version in PEP 440>"
+    __version__ = '<version in PEP 440>'
+
+There is only one space character surrounding equal sign ('=').
+For version examples see [packaging documentation](https://packaging.pypa.io/en/latest/version.html).
+Detailed [PEP 440](https://peps.python.org/pep-0440/).
 
 ## Usage
-
-Describe how to use your action here.
 
 ### Example workflow
 
 ```yaml
-name: My Workflow
-on: [push, pull_request]
+name: Version bump
+
+on: [workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Run action
+      - uses: actions/checkout@master
 
-      # Put your action repo here
-      uses: me/myaction@master
+      - name: Version bump
+        id: version-bump
 
-      # Put an example of your mandatory inputs here
-      with:
-        myInput: world
+        uses: papermerge/banger@master
+        with:
+          files_list: "pyproject.toml,example-data/version.py"
+
+      - name: Commit files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "version bump ${{steps.version-bump.outputs.OLD_VERSION}} -> ${{steps.version-bump.outputs.NEW_VERSION}}" -a
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
 ```
 
 ### Inputs
 
 | Input                                             | Description                                        |
 |------------------------------------------------------|-----------------------------------------------|
-| `myInput`  | An example mandatory input    |
-| `anotherInput` _(optional)_  | An example optional input    |
+| `files_list`  | Comma delimited list of files where to look for the versions to increment    |
+
 
 ### Outputs
 
 | Output                                             | Description                                        |
 |------------------------------------------------------|-----------------------------------------------|
-| `myOutput`  | An example output (returns 'Hello world')    |
+| `old_version`  | Project's version before the increment    |
+| `new_version`  | Project's version after the increment    |
 
-## Examples
 
-> NOTE: People ❤️ cut and paste examples. Be generous with them!
-
-### Using the optional input
-
-This is how to use the optional input.
-
-```yaml
-with:
-  myInput: world
-  anotherInput: optional
-```
-
-### Using outputs
-
-Show people how to use your outputs in another action.
-
-```yaml
-steps:
-- uses: actions/checkout@master
-- name: Run action
-  id: myaction
-
-  # Put your action name here
-  uses: me/myaction@master
-
-  # Put an example of your mandatory arguments here
-  with:
-    myInput: world
-
-# Put an example of using your outputs here
-- name: Check outputs
-    run: |
-    echo "Outputs - ${{ steps.myaction.outputs.myOutput }}"
-```
-
+Note that only the last file in the input list is used to set the output - this means that you
+need to make sure that each mentioned file has same version - after all a given project can
+have only a single version (in given git branch).
 
 ### Test
 
