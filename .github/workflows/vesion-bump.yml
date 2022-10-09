@@ -9,10 +9,9 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Version bump
-        id: version_bump
+        id: version-bump
 
-        # Put your action repo here
-        uses: ciur/gh-playground@master
+        uses: papermerge/banger@master
         with:
           files_list: "pyproject.toml,example-data/version.py"
 
@@ -20,7 +19,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git commit -m "Add changes" -a
+          git commit -m "version bump ${{steps.version-bump.outputs.OLD_VERSION}} -> ${{steps.version-bump.outputs.NEW_VERSION}}" -a
 
       - name: Push changes
         uses: ad-m/github-push-action@master

@@ -5,6 +5,11 @@ inputs:
   files_list:
     description: "List of files, delimited by comma, with source version"
     default: "pyproject.toml"
+outputs:
+  old_version:
+    description: "Project's version before the increment"
+  new_version:
+    description: "Project's version after the increment"
 runs:
   using: "docker"
   image: "Dockerfile"
