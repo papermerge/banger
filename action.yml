@@ -1,0 +1,10 @@
+name: "Bump project version"
+description: "Bumps version mentioned in specific list of files"
+author: "Eugen Ciur <eugen@papermerge.com>"
+inputs:
+  files_list:
+    description: "List of files, delimited by comma, with source version"
+    default: "pyproject.toml"
+runs:
+  using: "docker"
+  image: "Dockerfile"
