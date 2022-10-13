@@ -5,12 +5,16 @@ from packaging.version import Version
 
 VERSION_PATTERN_1 = re.compile(r"version = [\"|\'](.+)[\"|\']\n")
 VERSION_PATTERN_2 = re.compile(r"__version__ = [\"|\'](.+)[\"|\']\n")
+VERSION_PATTERN_3 = re.compile(r"export const version = [\"|\'](.+)[\"|\'];\n")
+VERSION_PATTERN_4 = re.compile(r"\"version\": \"(.+)\",\n")
 
 
 def search_ver(ver: str) -> str:
     ver_patterns = [
         VERSION_PATTERN_1,
-        VERSION_PATTERN_2
+        VERSION_PATTERN_2,
+        VERSION_PATTERN_3,
+        VERSION_PATTERN_4,
     ]
 
     for pattern in ver_patterns:
@@ -24,6 +28,8 @@ def replace_ver(text, new_ver):
     ver_patterns = dict([
         (VERSION_PATTERN_1, f'version = "{new_ver}"\n'),
         (VERSION_PATTERN_2, f'__version__ = "{new_ver}"\n'),
+        (VERSION_PATTERN_3, f'export const version = "{new_ver}";\n'),
+        (VERSION_PATTERN_4, f'"version": "{new_ver}",\n'),
     ])
 
     for pattern, replacement in ver_patterns.items():

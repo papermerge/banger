@@ -35,6 +35,9 @@ def main():
         file_path = file_path.strip()
         content = get_file_content(file_path)
         old_version = search_ver(content)
+        if not old_version:
+            print(f"No version detected in file {file_path}")
+            continue
         new_version = increment_ver(old_version)
 
         print(f"{file_path}: {old_version} -> {new_version}")

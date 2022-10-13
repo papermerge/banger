@@ -24,6 +24,31 @@ def test_search_version_3():
     assert search_ver(text) == "2.1.0b2"
 
 
+def test_search_version_js_1():
+    text = """
+    export const version = '2.1.0b8';
+    """
+    assert search_ver(text) == "2.1.0b8"
+
+
+def test_search_version_js_2():
+    text = """
+    export const version = "2.1.0b8";
+    """
+    assert search_ver(text) == "2.1.0b8"
+
+
+def test_search_version_json_1():
+    text = """{
+        "name": "papermerge",
+        "version": "2.1.0b8",
+        "private": false,
+        "description": "Papermerge DMS frontend"
+    }
+    """
+    assert search_ver(text) == "2.1.0b8"
+
+
 def test_replace_version_1():
     old_version_text = """
     version = "2.38.0"
@@ -42,6 +67,34 @@ def test_replace_version_2():
     __version__ = "2.38.1"
     """
     assert replace_ver(old_version_text, "2.38.1") == new_version_text
+
+
+def test_replace_version_js():
+    old_version_text = """
+    export const version = "2.1.0b8";
+    """
+    new_version_text = """
+    export const version = "2.1.0b9";
+    """
+    assert replace_ver(old_version_text, "2.1.0b9") == new_version_text
+
+
+def test_replace_version_json():
+    old_version_text = """{
+        "name": "papermerge",
+        "version": "2.1.0b8",
+        "private": false,
+        "description": "Papermerge DMS frontend"
+    }
+    """
+    new_version_text = """{
+        "name": "papermerge",
+        "version": "2.1.0b9",
+        "private": false,
+        "description": "Papermerge DMS frontend"
+    }
+    """
+    assert replace_ver(old_version_text, "2.1.0b9") == new_version_text
 
 
 def test_increment_ver():
