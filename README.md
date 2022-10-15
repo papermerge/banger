@@ -1,6 +1,6 @@
-# Banger - Project Version Bumper
+# Banger
 
-This is GitHub action for bumping project version.
+This is GitHub action for project version extraction and/or bumping.
 
 You provide a list of files where project version is defined and banger GitHub action will
 iterate given list of files and perform following steps with each of them:

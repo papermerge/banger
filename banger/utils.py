@@ -35,7 +35,7 @@ def replace_ver(text, new_ver):
     for pattern, replacement in ver_patterns.items():
         match = pattern.search(text)
         if match:
-            return re.sub(pattern, replacement, text)
+            return re.sub(pattern, replacement, text, count=1)
 
 
 def increment_ver(version: str) -> Version:

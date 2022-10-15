@@ -59,6 +59,46 @@ def test_replace_version_1():
     assert replace_ver(old_version_text, "2.38.1") == new_version_text
 
 
+def test_replace_version_with_twist():
+    """
+    Notice that package dependency 'shinx-multiversion may cause
+    unexpected side effect (i.e. may be unwillingly incremented) bacause
+    of xxxxversion = "..."
+    """
+    old_version_text = """
+        [tool.poetry]
+        name = "documentation"
+        version = "1.4.12"
+        description = "Papermerge Documentation"
+        authors = ["Eugen Ciur <eugen@papermerge.com>"]
+        license = "Apache 2.0"
+
+        [tool.poetry.dependencies]
+        python = "^3.10"
+        Sphinx = "^4.3.2"
+        sphinx-rtd-theme = "^1.0.0"
+        sphinx-autobuild = "^2021.3.14"
+        sphinx-multiversion = "^0.2.4"
+        sphinxcontrib-httpdomain = "^1.8.0"
+    """
+    new_version_text = """
+        [tool.poetry]
+        name = "documentation"
+        version = "1.4.13"
+        description = "Papermerge Documentation"
+        authors = ["Eugen Ciur <eugen@papermerge.com>"]
+        license = "Apache 2.0"
+
+        [tool.poetry.dependencies]
+        python = "^3.10"
+        Sphinx = "^4.3.2"
+        sphinx-rtd-theme = "^1.0.0"
+        sphinx-autobuild = "^2021.3.14"
+        sphinx-multiversion = "^0.2.4"
+        sphinxcontrib-httpdomain = "^1.8.0"
+    """
+    assert replace_ver(old_version_text, "1.4.13") == new_version_text
+
 def test_replace_version_2():
     old_version_text = """
     __version__ = "2.38.0"
