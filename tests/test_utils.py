@@ -24,6 +24,20 @@ def test_search_version_3():
     assert search_ver(text) == "2.1.0b2"
 
 
+def test_search_version_4():
+    text = """
+    VERSION = '1.0.6'
+    """
+    assert search_ver(text) == "1.0.6"
+
+
+def test_search_version_5():
+    text = """
+    VERSION = "1.0.6"
+    """
+    assert search_ver(text) == "1.0.6"
+
+
 def test_search_version_js_1():
     text = """
     export const version = '2.1.0b8';

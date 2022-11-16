@@ -3,7 +3,7 @@ import re
 from packaging.version import Version
 
 
-VERSION_PATTERN_1 = re.compile(r"version = [\"|\'](.+)[\"|\']\n")
+VERSION_PATTERN_1 = re.compile(r"version = [\"|\'](.+)[\"|\']\n", re.I)
 VERSION_PATTERN_2 = re.compile(r"__version__ = [\"|\'](.+)[\"|\']\n")
 VERSION_PATTERN_3 = re.compile(r"export const version = [\"|\'](.+)[\"|\'];\n")
 VERSION_PATTERN_4 = re.compile(r"\"version\": \"(.+)\",\n")

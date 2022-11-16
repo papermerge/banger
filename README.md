@@ -20,6 +20,8 @@ For **python files**, version format in version file must have one of the follow
 ```
 version = "<version in PEP 440>"
 version = '<version in PEP 440>'
+VERSION = '<version in PEP 440>'
+VERSION = "<version in PEP 440>"
 __version__ = "<version in PEP 440>"
 __version__ = '<version in PEP 440>'
 ```
