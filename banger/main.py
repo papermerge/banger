@@ -9,6 +9,10 @@ from banger.utils import (
 
 INCREMENTED_PART = ("major", "minor", "micro")
 
+def set_output(name: str, value: str) -> None:
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+        print(f'{name}={value}', file=fh)
+
 
 def get_file_content(file_path: str) -> str:
 
@@ -61,12 +65,12 @@ def main():
         set_file_content(file_path, new_content)
 
     if old_version:
-        os.environ['GITHUB_OUTPUT'] = f"old_version={old_version}"
+        set_output("old_version", old_version)
     else:
         print("old version not found")
 
     if new_version:
-        os.environ['GITHUB_OUTPUT'] = f"new_version={new_version}"
+        set_output("new_version", new_version)
     else:
         print("new version not set")
 
