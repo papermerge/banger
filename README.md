@@ -8,7 +8,9 @@ iterate given list of files and perform following steps with each of them:
 2. increment it e.g. 2.1.30
 3. and finally it will overwrite respective file with incremented version (`new version`)
 
-As of now, banger will increment only micro part of the version - i.e. the patch version.
+By default, will increment only micro part of the version (the patch version).
+In order to increment minor or major part of the version you need to specify parameter `incremented_part`
+to `minor` or `major` respectively.
 
 Following files types are supported:
 
@@ -90,9 +92,10 @@ jobs:
 
 ### Inputs
 
-| Input                                             | Description                                        |
-|------------------------------------------------------|-----------------------------------------------|
-| `files_list`  | Comma delimited list of files where to look for the versions to increment    |
+| Input              | Description                                                               |
+|--------------------|---------------------------------------------------------------------------|
+| `files_list`       | Comma delimited list of files where to look for the versions to increment |
+| `incremented_part` | One of `major`, `minor`, `micro`. Defaults to `micro`.                    |
 
 
 ### Outputs
