@@ -29,8 +29,8 @@ def main():
     incremented_part = os.environ["INPUT_INCREMENTED_PART"]
 
     if incremented_part not in INCREMENTED_PART:
-        printf(f"incremented_part expected to be one of {INCREMENTED_PART}")
-        printf(f"actual value is {incremented_part}")
+        print(f"incremented_part expected to be one of {INCREMENTED_PART}")
+        print(f"actual value is {incremented_part}")
         return
 
     # In case multiple files are given only last file's version will be
