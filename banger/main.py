@@ -7,6 +7,9 @@ from banger.utils import (
 )
 
 
+INCREMENTED_PART = ("major", "minor", "micro")
+
+
 def get_file_content(file_path: str) -> str:
 
     with open(file_path, "r") as file:
@@ -23,6 +26,12 @@ def set_file_content(file_path: str, content: str) -> None:
 
 def main():
     files_list = os.environ["INPUT_FILES_LIST"]
+    incremented_part = os.environ["INPUT_INCREMENTED_PART"]
+
+    if incremented_part not in INCREMENTED_PART:
+        printf(f"incremented_part expected to be one of {INCREMENTED_PART}")
+        printf(f"actual value is {incremented_part}")
+        return
 
     # In case multiple files are given only last file's version will be
     # set as output - this means that you need to take care yourself
@@ -46,12 +55,12 @@ def main():
         set_file_content(file_path, new_content)
 
     if old_version:
-        print(f"::set-output name=old_version::{old_version}")
+        os.environ['GITHUB_OUTPUT'] = f"old_version={old_version}"
     else:
         print("old version not found")
 
     if new_version:
-        print(f"::set-output name=new_version::{new_version}")
+        os.environ['GITHUB_OUTPUT'] = f"new_version={new_version}"
     else:
         print("new version not set")
 

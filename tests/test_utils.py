@@ -1,3 +1,5 @@
+import pytest
+
 from packaging.version import Version
 
 from banger.utils import search_ver, increment_ver, replace_ver
@@ -141,3 +143,18 @@ def test_increment_ver():
     assert increment_ver("2.1.0b1") == Version("2.1.0b2")
     assert increment_ver("2.1.1") == Version("2.1.2")
     assert increment_ver("2.1.1dev2") == Version("2.1.1dev3")
+
+
+def test_increment_ver_minor():
+    assert increment_ver("2.1.0b22", minor=True) == Version("2.1.0")
+    assert increment_ver("2.1.0", minor=True) == Version("2.2.0")
+
+
+def test_increment_ver_major():
+    assert increment_ver("2.1.0b22", major=True) == Version("3.0.0")
+    assert increment_ver("2.1.0", major=True) == Version("3.0.0")
+
+
+def test_try_to_increment_both_minor_and_major():
+    with pytest.raises(ValueError):
+        increment_ver("2.1.0", minor=True, major=True)
