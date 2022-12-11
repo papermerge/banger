@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "banger"
-version = "0.2.0"
+version = "0.3.0"
 description = "Increments app version"
 authors = ["Eugen Ciur <eugen@papermerge.com>"]
 readme = "README.md"
