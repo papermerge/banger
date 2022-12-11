@@ -47,7 +47,13 @@ def main():
         if not old_version:
             print(f"No version detected in file {file_path}")
             continue
-        new_version = increment_ver(old_version)
+        _minor = incremented_part == 'minor'
+        _major = incremented_part == 'major'
+        new_version = increment_ver(
+            old_version,
+            minor=_minor,
+            major=_major
+        )
 
         print(f"{file_path}: {old_version} -> {new_version}")
 

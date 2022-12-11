@@ -5,6 +5,9 @@ inputs:
   files_list:
     description: "List of files, delimited by comma, with source version"
     default: "pyproject.toml"
+  incremented_part:
+    description: "Which part of the version to increment"
+    default: "micro"
 outputs:
   old_version:
     description: "Project's version before the increment"
