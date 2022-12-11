@@ -1,6 +1,16 @@
 name: Version bump
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        type: choice
+        description: Incremented Part
+        default: 'micro'
+        options:
+          - major
+          - minor
+          - micro
 
 jobs:
   build:
@@ -14,6 +24,7 @@ jobs:
         uses: papermerge/banger@master
         with:
           files_list: "pyproject.toml,example-data/version.py"
+          incremented_part: ${{ inputs.incremented_part }}
 
       - name: Commit files
         run: |
