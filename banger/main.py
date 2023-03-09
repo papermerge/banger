@@ -8,7 +8,7 @@ from banger.utils import (
 )
 
 
-INCREMENTED_PART = ("major", "minor", "micro", "pre", "dev", "final")
+INCREMENTED_PART = ("major", "minor", "micro", "pre", "dev", "final", "-")
 
 
 def set_output(name: str, value: str) -> None:

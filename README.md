@@ -92,10 +92,10 @@ jobs:
 
 ### Inputs
 
-| Input              | Description                                                               |
-|--------------------|---------------------------------------------------------------------------|
-| `files_list`       | Comma delimited list of files where to look for the versions to increment |
-| `incremented_part` | One of `major`, `minor`, `micro`. Defaults to `micro`.                    |
+| Input              | Description                                                                  |
+|--------------------|------------------------------------------------------------------------------|
+| `files_list`       | Comma delimited list of files where to look for the versions to increment    |
+| `incremented_part` | One of `major`, `minor`, `micro`, `dev`, `pre`, `final`, `-` Defaults to `-`. |
 
 
 ### Outputs
