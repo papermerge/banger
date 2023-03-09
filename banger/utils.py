@@ -1,12 +1,21 @@
 import re
 
 from packaging.version import Version
-
+from enum import Enum
 
 VERSION_PATTERN_1 = re.compile(r"version = [\"|\'](.+)[\"|\']\n", re.I)
 VERSION_PATTERN_2 = re.compile(r"__version__ = [\"|\'](.+)[\"|\']\n")
 VERSION_PATTERN_3 = re.compile(r"export const version = [\"|\'](.+)[\"|\'];\n")
 VERSION_PATTERN_4 = re.compile(r"\"version\": \"(.+)\",\n")
+
+
+class IncrementType(Enum):
+    MAJOR = 1
+    MINOR = 2
+    MICRO = 3
+    DEV = 4  # make or increment dev part
+    PRE = 5  # make or increment a pre-release
+    FINAL = 6  # creates a final release from pre-release
 
 
 def search_ver(ver: str) -> str:
@@ -40,62 +49,60 @@ def replace_ver(text, new_ver):
 
 def increment_ver(
     version: str,
-    major: bool = False,
-    minor: bool = False
+    inc_type: IncrementType = None
 ) -> Version:
-    """
-    Increments version string.
+    """Increments version string"""
 
-    :param version: Version string to bump in format <major.minor.micro>
-    :param minor: Increment major? Default value = False
-    :param minor: Increment minor? Default value = False
-    :return: Incremented version string
-
-    By default, increments version's micro part.
-    Example:
-        2.0.0 -> (default behaviour) 2.0.1
-        2.0.1 -> (default behaviour) 2.0.2
-        2.0.0b1 -> (default behaviour) 2.0.b3
-        2.0.2 -> (when minor=True) 2.1.0
-        2.0.2 -> (when major=True) 3.0.0
-
-    When both major=True and minor=True -> ValueError
-    """
     if not version:
         raise ValueError("Empty version")
 
-    if major and minor:
-        raise ValueError("Major and minor cannot be both True")
-
     current = Version(version)
 
-    if major:  # major increment
+    if inc_type == IncrementType.MAJOR:  # major increment
         cur = current
         new_ver = f"{cur.major + 1}.0.0"
         return Version(new_ver)
-
-    if minor:  # minor increment
+    elif inc_type == IncrementType.MINOR:  # minor increment
         cur = current
-        if cur.is_prerelease or cur.is_devrelease:
-            new_ver = f"{cur.major}.{cur.minor}.0"
+        new_ver = f"{cur.major}.{cur.minor + 1}.0"
+        return Version(new_ver)
+    elif inc_type == IncrementType.MICRO:
+        cur = current
+        new_ver = f"{cur.major}.{cur.minor}.{cur.micro + 1}"
+        return Version(new_ver)
+    elif inc_type == IncrementType.DEV:
+        cur = current
+        if cur.is_devrelease:
+            new_ver = f"{cur.base_version}.dev{cur.dev + 1}"
         else:
-            new_ver = f"{cur.major}.{cur.minor + 1}.0"
+            new_ver = f"{cur.major}.{cur.minor}.{cur.micro + 1}.dev1"
+        return Version(new_ver)
+    elif inc_type == IncrementType.PRE:
+        cur = current
+        if cur.is_prerelease:
+            if cur.is_devrelease:
+                new_ver = f"{cur.major}.{cur.minor}.{cur.micro}.rc1"
+            else:
+                letter, num = current.pre
+                new_ver = f"{cur.major}.{cur.minor}.{cur.micro}.{letter}{num + 1}"
+        else:
+            new_ver = f"{cur.major}.{cur.minor}.{cur.micro + 1}.rc1"
+
+        return Version(new_ver)
+    elif inc_type == IncrementType.FINAL:
+        cur = current
+        new_ver = f"{cur.major}.{cur.minor}.{cur.micro}"
         return Version(new_ver)
 
-    # rest of code deals with minor increment
-
+    # inc_type is not provided
     if current.is_devrelease:
-        number = current.dev
-        number += 1
-        new_ver = f"{current.base_version}.dev{number}"
-
+        cur = current
+        new_ver = f"{cur.base_version}.dev{cur.dev + 1}"
         return Version(new_ver)
-
-    if current.is_prerelease:
+    elif current.is_prerelease:
+        cur = current
         letter, number = current.pre
-        number += 1
-        new_ver = f"{current.base_version}.{letter}{number}"
-
+        new_ver = f"{cur.base_version}.{letter}{number + 1}"
         return Version(new_ver)
 
     cur = current

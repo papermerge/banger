@@ -2,7 +2,7 @@ import pytest
 
 from packaging.version import Version
 
-from banger.utils import search_ver, increment_ver, replace_ver
+from banger.utils import search_ver, increment_ver, replace_ver, IncrementType
 
 
 def test_search_version_1():
@@ -160,15 +160,30 @@ def test_increment_ver():
 
 
 def test_increment_ver_minor():
-    assert increment_ver("2.1.0b22", minor=True) == Version("2.1.0")
-    assert increment_ver("2.1.0", minor=True) == Version("2.2.0")
+    assert increment_ver("2.1.0b22", IncrementType.FINAL) == Version("2.1.0")
+    assert increment_ver("2.1.0", IncrementType.MINOR) == Version("2.2.0")
 
 
 def test_increment_ver_major():
-    assert increment_ver("2.1.0b22", major=True) == Version("3.0.0")
-    assert increment_ver("2.1.0", major=True) == Version("3.0.0")
+    assert increment_ver("2.1.0b22", IncrementType.MAJOR) == Version("3.0.0")
+    assert increment_ver("2.1.0", IncrementType.MAJOR) == Version("3.0.0")
 
 
-def test_try_to_increment_both_minor_and_major():
-    with pytest.raises(ValueError):
-        increment_ver("2.1.0", minor=True, major=True)
+def test_increment_dev():
+    assert increment_ver("2.1.6", IncrementType.DEV) == Version("2.1.7.dev1")
+    assert increment_ver(
+        "2.1.7.dev1", IncrementType.DEV
+    ) == Version("2.1.7.dev2")
+    assert increment_ver("2.1.7.dev1") == Version("2.1.7.dev2")
+    assert increment_ver("2.1.7.dev2") == Version("2.1.7.dev3")
+    assert increment_ver("2.1.7.dev3") == Version("2.1.7.dev4")
+    assert increment_ver("2.1.7.dev4", IncrementType.FINAL) == Version("2.1.7")
+
+
+def test_incrment_rc():
+    assert increment_ver(
+        "2.1.6.dev7", IncrementType.PRE
+    ) == Version("2.1.6.rc1")
+    assert increment_ver("2.1.7.rc1") == Version("2.1.7.rc2")
+    assert increment_ver("2.1.7.rc2") == Version("2.1.7.rc3")
+    assert increment_ver("2.1.7.rc3", IncrementType.FINAL) == Version("2.1.7")

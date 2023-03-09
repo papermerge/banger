@@ -3,11 +3,13 @@ import os
 from banger.utils import (
     search_ver,
     increment_ver,
-    replace_ver
+    replace_ver,
+    IncrementType
 )
 
 
-INCREMENTED_PART = ("major", "minor", "micro")
+INCREMENTED_PART = ("major", "minor", "micro", "pre", "dev", "final")
+
 
 def set_output(name: str, value: str) -> None:
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
@@ -51,12 +53,23 @@ def main():
         if not old_version:
             print(f"No version detected in file {file_path}")
             continue
-        _minor = incremented_part == 'minor'
-        _major = incremented_part == 'major'
+        inc_type = None
+        if incremented_part == 'minor':
+            inc_type = IncrementType.MINOR
+        if incremented_part == 'major':
+            inc_type = IncrementType.MAJOR
+        if incremented_part == 'minor':
+            inc_type = IncrementType.MINOR
+        if incremented_part == 'pre':
+            inc_type = IncrementType.PRE
+        if incremented_part == 'dev':
+            inc_type = IncrementType.DEV
+        if incremented_part == 'final':
+            inc_type = IncrementType.FINAL
+
         new_version = increment_ver(
             old_version,
-            minor=_minor,
-            major=_major
+            inc_type=inc_type
         )
 
         print(f"{file_path}: {old_version} -> {new_version}")
@@ -73,7 +86,6 @@ def main():
         set_output("new_version", new_version)
     else:
         print("new version not set")
-
 
 
 if __name__ == "__main__":
